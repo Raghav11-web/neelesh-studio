@@ -30,10 +30,10 @@ h1{font-size:17px;margin:0}.sub{font-size:12.5px;color:var(--mute)}
 .time{font-size:10.5px;opacity:.6;margin-top:4px}
 .ack{background:var(--teal2)}
 video{width:100%;max-width:340px;max-height:60vh;border-radius:12px;background:#000;display:block;margin-top:8px}
-.btn{display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:8px 14px;font:600 13px inherit;cursor:pointer;text-decoration:none;margin-top:8px;transition:transform .15s,box-shadow .15s}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:8px 14px;font-family:inherit;font-weight:600;font-size:13px;cursor:pointer;text-decoration:none;margin-top:8px;transition:transform .15s,box-shadow .15s}
 .btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px #0f9b8e40}
 .composer{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);align-items:flex-end}
-textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:14px;padding:11px 13px;font:15px inherit;max-height:180px;min-height:46px;outline:none;background:#fbfcfc;transition:border .2s}
+textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:14px;padding:11px 13px;font-family:inherit;font-size:15px;line-height:1.4;max-height:180px;min-height:46px;outline:none;background:#fbfcfc;transition:border .2s}
 textarea:focus{border-color:var(--teal)}
 .send{width:46px;height:46px;border-radius:14px;border:0;background:var(--teal);color:#fff;cursor:pointer;display:grid;place-items:center;flex:none;transition:transform .15s}.send:active{transform:scale(.94)}.send:disabled{opacity:.5}
 .hint{font-size:11.5px;color:var(--mute);padding:0 14px 8px}
@@ -42,7 +42,7 @@ textarea:focus{border-color:var(--teal)}
 .videos .v{background:#f1f5f4;border-radius:14px;padding:8px;font-size:12px}.videos video{margin:0;max-height:300px}
 .login{margin:auto;width:min(360px,92vw);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 20px 50px #1d2b3614;animation:pop .5s}
 .login h2{margin:14px 0 4px;font-size:20px}.login p{color:var(--mute);font-size:13.5px;margin:0 0 18px}
-.login input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:16px inherit;outline:none}.login input:focus{border-color:var(--teal)}
+.login input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font-family:inherit;font-size:16px;outline:none}.login input:focus{border-color:var(--teal)}
 .login .btn{width:100%;justify-content:center;padding:12px;font-size:15px;margin-top:12px}
 .err{color:#c0392b;font-size:13px;min-height:18px;margin-top:8px}
 .typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-right:3px;animation:bl 1.2s infinite}.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
@@ -109,7 +109,7 @@ function renderVideos(){const vs=msgs.filter(m=>m.videoUrl).reverse();$('#vcount
   $('#videos').innerHTML=vs.length?vs.map(m=>`<div class="v"><video controls playsinline preload="metadata" src="${esc(vsrc(m.videoUrl))}"></video><div style="margin-top:6px">${esc((m.text||'Video').slice(0,60))}</div><a class="btn" href="${API}/api/download/${m.id}?t=${encodeURIComponent(TOKEN)}">⬇ Download</a></div>`).join(''):'<div class="empty">Abhi koi video nahi hai. Ready hote hi yahan dikhegi.</div>'}
 function setStatus(s){const el=$('#status');el.className='status '+s.state;$('#stxt').textContent=s.label;$('#typing')?.remove();
   if(s.state==='working'){const t=document.createElement('div');t.id='typing';t.className='msg assistant typing';t.innerHTML='<span></span><span></span><span></span>';$('#feed').appendChild(t)}}
-function add(list){let n=0;for(const m of list){if(m.id<=last)continue;last=m.id;msgs.push(m);render(m);n++}if(n){renderVideos();const f=$('#feed');requestAnimationFrame(()=>f.scrollTop=f.scrollHeight)}return n}
+function add(list){let n=0;for(const m of list){if(m.id<=last)continue;last=m.id;msgs.push(m);render(m);n++}if(n){renderVideos();const f=$('#feed');const go=()=>f.scrollTop=f.scrollHeight;requestAnimationFrame(go);f.querySelectorAll('video').forEach(v=>v.addEventListener('loadedmetadata',()=>{if(f.scrollHeight-f.scrollTop-f.clientHeight<700)go()},{once:true}))}return n}
 async function poll(){clearTimeout(pollT);if(!TOKEN)return;
   try{const j=await call('/api/messages?since='+last);add(j.messages);setStatus(j.status);failures=0}
   catch(e){if(e.message==='auth')return;failures++;setStatus({state:'offline',label:'Reconnecting…'});if(failures%2===0)await base(true)}
