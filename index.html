@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Neelesh Studio · Steve</title>
+<meta name="theme-color" content="#f7f8f6">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='16' fill='%230f9b8e'/><path d='M24 20l22 12-22 12z' fill='white'/></svg>">
+<style>
+:root{--bg:#f7f8f6;--card:#fff;--ink:#1d2b36;--mute:#6b7a86;--line:#e3e8ea;--teal:#0f9b8e;--teal2:#e3f4f1;--blue:#2f6fde;--blue2:#e8f0fd;--warn:#d98a1c}
+*{box-sizing:border-box}html,body{height:100%;margin:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Inter,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:-20%;background:radial-gradient(40% 35% at 15% 10%,#d9f1ec 0,transparent 70%),radial-gradient(35% 30% at 90% 85%,#dfe9fb 0,transparent 70%);animation:drift 18s ease-in-out infinite alternate;z-index:-1}
+@keyframes drift{to{transform:translate(3%,2%) scale(1.05)}}
+.app{max-width:860px;margin:0 auto;height:100dvh;display:flex;flex-direction:column;padding:14px 14px calc(10px + env(safe-area-inset-bottom))}
+header{display:flex;align-items:center;gap:12px;padding:6px 4px 12px}
+.logo{width:40px;height:40px;border-radius:12px;background:linear-gradient(135deg,var(--teal),var(--blue));display:grid;place-items:center;color:#fff;font-weight:700;box-shadow:0 6px 18px #0f9b8e33}
+h1{font-size:17px;margin:0}.sub{font-size:12.5px;color:var(--mute)}
+.status{margin-left:auto;display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--line);padding:7px 12px;border-radius:999px;font-size:12.5px;white-space:nowrap;transition:all .3s}
+.dot{width:9px;height:9px;border-radius:50%;background:var(--mute)}
+.status.working .dot{background:var(--warn);animation:pulse 1.4s infinite}.status.ready .dot{background:var(--teal)}.status.idle .dot{background:var(--blue)}.status.offline .dot{background:#b8c0c6}
+@keyframes pulse{0%{box-shadow:0 0 0 0 #d98a1c66}100%{box-shadow:0 0 0 9px #d98a1c00}}
+.panel{flex:1;min-height:0;background:var(--card);border:1px solid var(--line);border-radius:20px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 30px #1d2b360a}
+.tabs{display:flex;gap:6px;padding:10px 12px;border-bottom:1px solid var(--line);font-size:13px}
+.tab{padding:6px 12px;border-radius:999px;color:var(--mute);cursor:pointer;border:0;background:none;font:inherit}.tab.on{background:var(--teal2);color:var(--teal);font-weight:600}
+.feed{flex:1;overflow-y:auto;padding:16px 14px;display:flex;flex-direction:column;gap:10px;scroll-behavior:smooth}
+.msg{max-width:84%;padding:10px 13px;border-radius:16px;line-height:1.45;font-size:14.5px;white-space:pre-wrap;word-wrap:break-word;animation:pop .35s cubic-bezier(.2,.8,.3,1.2)}
+@keyframes pop{from{opacity:0;transform:translateY(8px) scale(.98)}}
+.user{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px}
+.assistant{align-self:flex-start;background:#f1f5f4;border-bottom-left-radius:5px}
+.who{font-size:11px;font-weight:600;color:var(--teal);margin-bottom:3px}.user .who{color:#dbe7ff}
+.time{font-size:10.5px;opacity:.6;margin-top:4px}
+.ack{background:var(--teal2)}
+video{width:100%;max-width:340px;max-height:60vh;border-radius:12px;background:#000;display:block;margin-top:8px}
+.btn{display:inline-flex;align-items:center;gap:6px;background:var(--teal);color:#fff;border:0;border-radius:10px;padding:8px 14px;font:600 13px inherit;cursor:pointer;text-decoration:none;margin-top:8px;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 6px 14px #0f9b8e40}
+.composer{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);align-items:flex-end}
+textarea{flex:1;resize:none;border:1px solid var(--line);border-radius:14px;padding:11px 13px;font:15px inherit;max-height:180px;min-height:46px;outline:none;background:#fbfcfc;transition:border .2s}
+textarea:focus{border-color:var(--teal)}
+.send{width:46px;height:46px;border-radius:14px;border:0;background:var(--teal);color:#fff;cursor:pointer;display:grid;place-items:center;flex:none;transition:transform .15s}.send:active{transform:scale(.94)}.send:disabled{opacity:.5}
+.hint{font-size:11.5px;color:var(--mute);padding:0 14px 8px}
+.empty{margin:auto;text-align:center;color:var(--mute);font-size:14px;max-width:340px;line-height:1.5}
+.videos{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;padding:16px}
+.videos .v{background:#f1f5f4;border-radius:14px;padding:8px;font-size:12px}.videos video{margin:0;max-height:300px}
+.login{margin:auto;width:min(360px,92vw);background:var(--card);border:1px solid var(--line);border-radius:22px;padding:28px;box-shadow:0 20px 50px #1d2b3614;animation:pop .5s}
+.login h2{margin:14px 0 4px;font-size:20px}.login p{color:var(--mute);font-size:13.5px;margin:0 0 18px}
+.login input{width:100%;border:1px solid var(--line);border-radius:12px;padding:12px 14px;font:16px inherit;outline:none}.login input:focus{border-color:var(--teal)}
+.login .btn{width:100%;justify-content:center;padding:12px;font-size:15px;margin-top:12px}
+.err{color:#c0392b;font-size:13px;min-height:18px;margin-top:8px}
+.typing span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-right:3px;animation:bl 1.2s infinite}.typing span:nth-child(2){animation-delay:.2s}.typing span:nth-child(3){animation-delay:.4s}
+@keyframes bl{50%{opacity:.25;transform:translateY(-2px)}}
+.hidden{display:none!important}
+@media (max-width:560px){.sub{display:none}.status{padding:6px 10px;font-size:11.5px}.msg{max-width:90%}h1{font-size:16px}}
+</style></head>
+<body>
+<div class="app">
+  <div id="login" class="login hidden">
+    <div class="logo">S</div>
+    <h2>Neelesh Studio</h2>
+    <p>Apna passkey daaliye. Phir yahin prompts bhejiye, Steve video bana ke yahin dega.</p>
+    <form id="lf"><input id="pk" type="password" placeholder="Passkey" autocomplete="current-password" autofocus>
+    <button class="btn" type="submit">Open studio</button><div class="err" id="lerr"></div></form>
+  </div>
+  <div id="main" class="hidden" style="display:flex;flex-direction:column;flex:1;min-height:0">
+    <header>
+      <div class="logo">S</div>
+      <div><h1>Neelesh Studio</h1><div class="sub">Chat with Steve · prompts, updates and videos in one place</div></div>
+      <div id="status" class="status idle"><span class="dot"></span><span id="stxt">Connecting…</span></div>
+    </header>
+    <div class="panel">
+      <div class="tabs"><button class="tab on" data-t="chat">Chat</button><button class="tab" data-t="videos">Videos <span id="vcount"></span></button></div>
+      <div id="feed" class="feed"><div class="empty" id="empty">Namaste Neelesh! 👋<br>Apna video prompt yahan paste kijiye. Details aur changes bhi yahin bhejiye, Steve har baat ka jawab dega aur ready video yahin milegi.</div></div>
+      <div id="videos" class="videos hidden"></div>
+      <div id="comp"><div class="composer">
+        <textarea id="ta" rows="1" placeholder="Prompt, details ya changes likhiye…"></textarea>
+        <button class="send" id="sendb" title="Send"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13"/><path d="M22 2l-7 20-4-9-9-4z"/></svg></button>
+      </div><div class="hint">Enter = new line · Ctrl/⌘+Enter ya ➤ = send</div></div>
+    </div>
+  </div>
+</div>
+<script>
+const $=s=>document.querySelector(s);
+let API='', TOKEN=localStorage.getItem('ns_token')||'', last=0, msgs=[], pollT=null, failures=0;
+async function base(force){
+  if(!location.hostname.endsWith('github.io')){API='';return}
+  try{const r=await fetch('config.json?t='+(force?Date.now():Math.floor(Date.now()/60000)),{cache:'no-store'});API=(await r.json()).api.replace(/\/$/,'')}catch(e){}
+}
+async function call(p,opt={}){
+  const r=await fetch(API+p,{...opt,headers:{'Content-Type':'application/json',...(TOKEN?{Authorization:'Bearer '+TOKEN}:{}),...(opt.headers||{})}});
+  if(r.status===401&&p!=='/api/login'){logout();throw new Error('auth')}
+  const j=await r.json().catch(()=>({}));if(!r.ok)throw Object.assign(new Error(j.error||r.status),{status:r.status});return j;
+}
+function logout(){TOKEN='';localStorage.removeItem('ns_token');show(false)}
+function show(on){$('#login').classList.toggle('hidden',on);$('#main').classList.toggle('hidden',!on);if(on){poll();$('#ta').focus()}}
+$('#lf').onsubmit=async e=>{e.preventDefault();$('#lerr').textContent='';
+  for(let i=0;i<2;i++){try{const j=await call('/api/login',{method:'POST',body:JSON.stringify({passkey:$('#pk').value})});TOKEN=j.token;localStorage.setItem('ns_token',TOKEN);return show(true)}
+  catch(err){if(err.status===401){$('#lerr').textContent='Passkey galat hai, dobara try kijiye.';return}await base(true)}}
+  $('#lerr').textContent='Server se connect nahi ho paya, thodi der mein try kijiye.'};
+const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const link=s=>esc(s).replace(/https?:\/\/[^\s<]+/g,u=>`<a href="${u}" target="_blank" rel="noopener">${u}</a>`);
+const vsrc=u=>u.startsWith('/')?API+u:u;
+const tm=t=>new Date(t).toLocaleString([], {hour:'2-digit',minute:'2-digit',day:'numeric',month:'short'});
+function render(m){
+  $('#empty')?.remove();
+  const d=document.createElement('div');d.className='msg '+m.role+(m.kind==='ack'?' ack':'');
+  let h=`<div class="who">${m.author}</div>${m.text?link(m.text):''}`;
+  if(m.videoUrl)h+=`<video controls playsinline preload="metadata" src="${esc(vsrc(m.videoUrl))}"></video><a class="btn" href="${API}/api/download/${m.id}?t=${encodeURIComponent(TOKEN)}">⬇ Download video</a>`;
+  h+=`<div class="time">${tm(m.createdAt)}</div>`;d.innerHTML=h;$('#feed').appendChild(d);
+}
+function renderVideos(){const vs=msgs.filter(m=>m.videoUrl).reverse();$('#vcount').textContent=vs.length?`(${vs.length})`:'';
+  $('#videos').innerHTML=vs.length?vs.map(m=>`<div class="v"><video controls playsinline preload="metadata" src="${esc(vsrc(m.videoUrl))}"></video><div style="margin-top:6px">${esc((m.text||'Video').slice(0,60))}</div><a class="btn" href="${API}/api/download/${m.id}?t=${encodeURIComponent(TOKEN)}">⬇ Download</a></div>`).join(''):'<div class="empty">Abhi koi video nahi hai. Ready hote hi yahan dikhegi.</div>'}
+function setStatus(s){const el=$('#status');el.className='status '+s.state;$('#stxt').textContent=s.label;$('#typing')?.remove();
+  if(s.state==='working'){const t=document.createElement('div');t.id='typing';t.className='msg assistant typing';t.innerHTML='<span></span><span></span><span></span>';$('#feed').appendChild(t)}}
+function add(list){let n=0;for(const m of list){if(m.id<=last)continue;last=m.id;msgs.push(m);render(m);n++}if(n){renderVideos();const f=$('#feed');requestAnimationFrame(()=>f.scrollTop=f.scrollHeight)}return n}
+async function poll(){clearTimeout(pollT);if(!TOKEN)return;
+  try{const j=await call('/api/messages?since='+last);add(j.messages);setStatus(j.status);failures=0}
+  catch(e){if(e.message==='auth')return;failures++;setStatus({state:'offline',label:'Reconnecting…'});if(failures%2===0)await base(true)}
+  pollT=setTimeout(poll,document.hidden?20000:(failures?8000:4000))}
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll()});
+async function sendMsg(){const ta=$('#ta');const text=ta.value.trim();if(!text)return;$('#sendb').disabled=true;
+  try{const j=await call('/api/messages',{method:'POST',body:JSON.stringify({text})});ta.value='';ta.style.height='';add([j.message,j.ack]);setStatus(j.status)}
+  catch(e){if(e.message!=='auth')alert('Message nahi gaya, internet check karke dobara bhejiye.')}
+  $('#sendb').disabled=false;ta.focus()}
+$('#sendb').onclick=sendMsg;
+$('#ta').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.ctrlKey||e.metaKey)){e.preventDefault();sendMsg()}});
+$('#ta').addEventListener('input',e=>{e.target.style.height='auto';e.target.style.height=Math.min(e.target.scrollHeight,180)+'px'});
+document.querySelectorAll('.tab').forEach(b=>b.onclick=()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('on',x===b));const v=b.dataset.t==='videos';$('#videos').classList.toggle('hidden',!v);$('#feed').classList.toggle('hidden',v);$('#comp').classList.toggle('hidden',v)});
+(async()=>{await base();show(!!TOKEN)})();
+</script>
+</body></html>
